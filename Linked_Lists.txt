@@ -1,0 +1,266 @@
+LinkedList.java:
+---------------
+import java.util.Scanner;
+public class LinkedList {
+    public Node head;
+    public int listCount;
+    int total;
+
+    public LinkedList(int d) {
+        head = new Node(d);
+        listCount = 1;
+        total = d;
+    }
+    public LinkedList() {
+        
+    }
+    public void setList(int d) {
+        head = new Node(d);
+        listCount = 1;
+        total = d;
+    }
+    
+    public void show() {
+        Node current = head;
+        if(listCount != 0) {
+            while(current.next != null) {
+                System.out.print(current.data+" --> ");
+                current = current.next;
+            }   
+            System.out.println(current.data);    
+        }
+        else {
+            System.out.println("No list available.");
+        }
+    }
+    public void displayCount() {
+        System.out.println("Length: " + listCount);
+    }
+    
+    public boolean addNode(int newData) {
+        Node end = new Node(newData);
+        Node current = head;
+        while(current.next != null) {
+            current = current.next;
+        }
+        current.next = end;
+        return true;
+    }
+    
+    public boolean addHead(int newData) {
+        Node begin = new Node(newData);
+        begin.next = head;
+        head = begin;
+        return true;
+    }
+    
+    public boolean insert(int newData) {
+        listCount++;
+        Node mid = new Node(newData);
+        Node current = head;
+        int b = 0;
+        if(listCount == 0) {
+            this.addNode(newData);
+            return true;
+        }
+        while(current.next != null && b == 0) {
+            if((current.data < mid.data && current.next.data > mid.data) || current.next.data == mid.data) {
+                mid.next = current.next;
+                current.next = mid;
+                b++;
+            }
+            current = current.next;
+        }
+        Node cur2 = head;
+        if(b==0) {
+            if(cur2.data < mid.data) {
+                this.addNode(newData);
+            }
+            else {
+                this.addHead(newData);
+            }
+        }
+        return true;
+    }
+    public boolean delete(int newData) {
+        if(listCount == 0) {
+            System.out.println("There are no elements present to delete.");
+            return true;
+        }
+        listCount--;
+        Node mid = new Node(newData);
+        if(head.data == mid.data) {
+            head = head.next;
+            return true;
+        }
+        Node curr2 = head;
+        while(curr2.next.next != null) {
+            curr2 = curr2.next;
+        }
+        if(curr2.next.data == mid.data) {
+            curr2.next = null;
+            return true;
+        }
+        Node current = head;
+        int x = 0;
+        while(current.next != null && x == 0) {
+            if(current.next.data == mid.data) {
+                current.next = current.next.next;
+                x++;
+                return true;
+            }
+            current = current.next;
+        }
+        return false;
+    }
+    
+    public void oddGame() {
+        Scanner input = new Scanner(System.in);
+        System.out.println("Enter a value to begin the list");
+        int b = input.nextInt();
+        this.setList(b);
+        int a = 0;
+        while(a < 100) {
+            System.out.println("Enter a number");
+            int d = input.nextInt();
+            if(d % 2 != 0 && d % 5 != 0) {
+                this.addNode(d);
+            }
+            else if(d % 2 != 0 && d % 5 == 0) {
+                this.addHead(d*2);
+            }
+            else if(d % 2 == 0 && d % 5 != 0) {
+                Node curr2 = head;
+                while(curr2.next.next != null) {
+                    curr2 = curr2.next;
+                }
+                curr2.next = null;
+            }
+            else if(d % 2 == 0 && d % 5 == 0) {
+                head = head.next;
+            }
+            // this.show();
+            // this.displayCount();
+            a = this.calcTotal();
+            //System.out.println("total: " + this.calcTotal());
+        }
+        System.out.println("Final Total: " + this.calcTotal());
+        this.show();
+        
+        
+    }
+    public int calcTotal() {
+        int t = 0;
+        Node current = head;
+        while(current.next != null) {
+            t += current.data;
+            current = current.next;
+        }
+        t += current.data;
+        //System.out.println(t);
+        return t;
+    }
+    
+    
+}
+
+MyProgram.java:
+--------------
+import java.util.Scanner;
+public class MyProgram
+{
+    public static void main(String[] args)
+    {
+        Scanner sc = new Scanner(System.in);
+        // int value = sc.nextInt();
+        
+        LinkedList myList = new LinkedList(3);
+        // myList.show();
+        // myList.insert(8);
+        // myList.show();
+        // myList.insert(17);
+        // myList.show();
+        // myList.insert(4);
+        // myList.show();
+        // myList.insert(6);
+        // myList.show();
+        // myList.insert(20);
+        // myList.show();
+        // myList.insert(11);
+        // myList.show();
+        char ans;
+        int x = 0;
+        do {
+            System.out.println("What would you like to do? \n1. Insert a value\n2. Delete a value\n3. Show List\n4. Display current length\n5. Quit\n(enter the number)");
+            ans = sc.next().charAt(0);
+            if(ans == '1') {
+                System.out.println("Enter a value");
+                int val = sc.nextInt();
+                if(x == 0) {
+                    myList = new LinkedList(val);
+                    x++;
+                }
+                else {
+                    myList.insert(val);
+                }
+            }
+            else if(ans == '2') {
+                System.out.println("Enter a value from the list");
+                int val2 = sc.nextInt();
+                myList.delete(val2);
+            }
+            else if(ans == '3') {
+                myList.show();
+            }
+            else if(ans == '4') {
+                myList.displayCount();
+            }
+            // System.out.print("ListCount: ");
+            // myList.displayCount();
+            // System.out.println();
+        }
+        while(ans != '5');
+        
+        
+        
+        // int val2 = sc.nextInt();
+        // myList.insert(val2);
+        // myList.show();
+        
+        // System.out.println("enter val to delete");
+        // int val3 = sc.nextInt();
+        // myList.delete(val3);
+        // myList.show();
+    }
+}
+
+Node.java:
+---------
+public class Node {
+    int data;
+    Node next = null;
+    
+    public Node(int d) {
+        data = d;
+    }
+}
+
+OddMenu.java:
+------------
+import java.util.Scanner;
+public class OddMenu {
+    public static void main(String[] args) {
+        LinkedList L = new LinkedList(4);
+        // L.insert(12);
+        // L.insert(13);
+        // System.out.println(L.calcTotal());
+        
+        // System.out.println(L.calcTotal());
+        // L.insert(5);
+        // L.insert(2);
+        // System.out.println(L.calcTotal());
+        L.oddGame();
+    }
+    
+}
+
